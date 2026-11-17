@@ -1,0 +1,15 @@
+.itemWrapper {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+}
+
+.contentWrapper {
+  border-bottom: 1px solid var(--mantine-color-customGray-3);
+  padding-bottom: 16px;
+  flex: 1;
+
+  &.lastItem {
+    border-bottom: none; 
+  }
+}

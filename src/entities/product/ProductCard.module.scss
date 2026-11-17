@@ -1,0 +1,15 @@
+.productGroup {
+  flex-wrap: wrap;
+
+  @media (min-width: 400px) {
+    flex-wrap: nowrap;
+  }
+}
+
+.productCard {
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--mantine-shadow-sm);
+  }
+}

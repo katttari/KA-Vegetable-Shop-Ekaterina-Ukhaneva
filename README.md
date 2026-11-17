@@ -1,75 +1,63 @@
-# React + TypeScript + Vite
+# KA Vegetable Shop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Что было реализовано
 
-Currently, two official plugins are available:
+- Загрузка списка овощей с API, пока идёт запрос к API, показывается loader
+- Карточки товаров с выбором количества (увеличением или уменьшением) и кнопкой «Add to cart»
+- При клике на кнопку «Add to cart» происходит добавление указанного товара в указанном количестве в корзину
+- Шапка с названием сайта и кнопкой корзины, которая закреплена сверху при прокрутке страницы
+- Количество товаров в корзине показывается бейджем
+- По клику на корзину открывается окно с товарами и итоговой суммой
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Стек
 
-## React Compiler
+- React, TypeScript, Vite
+- Mantine
+- Ky (запросы к API)
+- Vitest + React Testing Library
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Запуск
 
 ```
+npm install
+npm run dev
+```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Тесты:
 
 ```
+npm run test
+npm run test:run
+```
+
+## Структура проекта
+
+Проект структурирован по Feature-Sliced-Design (FSD):
+
+```
+src/
+  app/ # корень приложения, провайдеры
+  pages/ # страницы (CatalogPage)
+  widgets/ # шапка сайта, окно корзины, список товаров
+  entities/ # cart, product
+  shared/ # переиспользуемые компоненты
+```
+
+## Тесты
+
+Написаны на Vitest и React Testing Library.
+
+- **Карточка товара**: кнопки «+» и «-» меняют количество, «Add to cart» передаёт выбранное количество
+- **Корзина (PreviewCart и CartItem)**: изменение количества и цены, удаление товара, пустая корзина
+- **Хук `useCart`**: логика добавления товаров и подсчёта суммы
+- **Шапка сайта**: бейдж показывает общее количество товаров и скрыт при пустой корзине, клик по кнопке корзины вызывает `onCartClick`
+- **Список товаров**: сначала показываются loaderы, потом товары
+- **Общий**: клик по «Add to cart» обновляет бейдж в шапке
+
+## Принятые решения
+
+- Корзина хранится в `localStorage` под ключом `cart`, поэтому не пропадает после перезагрузки страницы
+- Клик на «-» у товара с количеством 1 удаляет его из корзины
+- Итоговая сумма не хранится в состоянии, а считается при каждом рендере из данных корзины
+- Состояние корзины общее для всего приложения и передаётся через `CartProvider`
+- Бейдж в шапке показывает общее количество штук (товара), а не количество строк разных позиций

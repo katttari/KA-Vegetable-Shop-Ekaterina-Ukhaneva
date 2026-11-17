@@ -1,0 +1,12 @@
+.cardWrapper {
+  z-index: 10000;
+}
+
+.cardList {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  max-height: 184px;
+  overflow-y: auto;
+}
